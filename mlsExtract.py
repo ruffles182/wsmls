@@ -2,6 +2,8 @@ import re
 from colorama import Fore
 import requests
 from props import Propiedad
+from props import log_action
+import sys
 
 ###############################################################################################
 #funcion basica de scrappeo
@@ -27,6 +29,7 @@ def linkExtraction(link_sin_formato):
 #lo siguiente puede ser una funcion de sacar ids, pensar si vale la pena en el futuro
 #sitio
 website = "https://www.chapalamls.net/en/properties/recently-added"
+log_action("iniciando Lectura del sitio " + website)
 id_max_lengh = 4
 separador_ids = "This Weeks Featured Properties"
 
@@ -46,26 +49,26 @@ for f in scrap_ids:
     separador_id = cadena.rfind('-')
     id = cadena[separador_id+1:]
     if id.isdigit() and len(id) >= id_max_lengh: ids_propiedades.append(id)
+ids_propiedades = list(set(ids_propiedades))
+log_action("Se encontraron " + str(len(ids_propiedades)) + ' registros')
 
 ###############################################################################################
 #esta seria otra funcion para sacar bloques de  las propiedades
 # haremos una lista de scrapt con la lista anterior que hicimos de ids
 #lista que guardará los bloques de texto
 bloques_propiedades = []
-#archivo para debuggear la correcta salida de datos
-archivo_dump = "output/salida.txt"
 for id in ids_propiedades:
     delimitador_inicial = "id='"+ str(id) +"'>"
     delimitador_final = '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">'
     patron_bloque = re.compile(r'{}(.*?){}'.format(re.escape(delimitador_inicial),re.escape(delimitador_final)),re.DOTALL)
     scrap_bloque = scrapCode(content, patron_bloque)
     bloques_propiedades.append(scrap_bloque)
-file1 = open(archivo_dump, 'w')
 
 ###############################################################################################
 #funcion donde filtramos los campos y los metemos a un objeto de tipo Propiedades
 propiedades = []
-n = 1
+
+n= 1
 for bloque in bloques_propiedades:
     propiedad = Propiedad()
     precio_final = 0
@@ -100,19 +103,19 @@ for bloque in bloques_propiedades:
     if link_seleccionado != "":
         propiedad.link = link_seleccionado
         id_y_nombre = linkExtraction(propiedad.link)
-        propiedad.id = id_y_nombre[0]
+        propiedad.codigo = id_y_nombre[0]
         propiedad.nombre = id_y_nombre[1]
         propiedad.moneda = moneda
         propiedad.precio = precio_final
         propiedad.direcion = domicilio_final
-        # print(link)
-        print(str(n) + ": con id - " + str(propiedad.id) + ' - ' + propiedad.nombre + 'con  precio de $' + propiedad.moneda + ' ' + propiedad.precio + ' hubicada en: ' + propiedad.direcion)
+        propiedades.append(propiedad)
         n = n + 1
-        
-
-    file1.writelines('\n\n\n' +str(str(n) + ": con id - " + str(propiedad.id) + ' - ' + propiedad.nombre + " registrado################################################################"))
-    file1.writelines(bloque)
-    
-file1.close()
 
 ###############################################################################################
+reporte = []
+n = 0
+for pro in propiedades:
+    if pro.insertar_propiedad():
+        log_action('se insertó' + pro.simple_print())
+        reporte.append(pro.codigo)
+        n = n + 1
