@@ -4,10 +4,12 @@ import requests
 from props import Propiedad
 from props import log_action
 import sys
+from conection import Page
 
 ###############################################################################################
 #funcion basica de scrappeo
-def scrapCode(cont, patr):
+def scrapCode(
+    t, patr):
     ## sacamos todas las apariciones de nuestro patron
     maquinas_repetidas = re.findall(patr, str(cont))
     ##removemos duplicados y devolvemos
@@ -28,7 +30,8 @@ def linkExtraction(link_sin_formato):
 ###############################################################################################
 #lo siguiente puede ser una funcion de sacar ids, pensar si vale la pena en el futuro
 #sitio
-website = "https://www.chapalamls.net/en/properties/recently-added"
+web = Page()
+website = web.web
 log_action("iniciando Lectura del sitio " + website)
 id_max_lengh = 4
 separador_ids = "This Weeks Featured Properties"
