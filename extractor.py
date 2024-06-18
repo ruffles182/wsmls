@@ -89,6 +89,9 @@ with sync_playwright() as p:
         if div_const_label is not None:
             div_const = div_const_label.find_next_sibling('div', class_='type-value min_height_20')
             const = div_const.text.strip()
+        #Dirección
+        address_raw = codigo_raw.find('p', class_='address m-1')
+        address = address_raw.text.strip()
         #price
         span_precio_raw = codigo_raw.find('span', class_='price_original')
         span_precio = span_precio_raw.text.strip()
@@ -105,8 +108,24 @@ with sync_playwright() as p:
         vendor_link = str(links[5].get('href'))
         nombre_vendor = str(links[5].get_text(strip=True))
 
-        
-        log_action(str(n) + ' - ' + nombre + ' - ' + nombre_vendor + ' - ' + estatus + ' - ' + str(dias_en_mercado) + ' publicado el: ' + str(fecha_publicacion) + ' tipo de propiedad: ' + tipo_propiedad + ' region: ' + str(region) + ' Lot mts: ' + str(lot) + ' Construction: ' + str(const) + '\n')
-        print(str(n) + ' - ' + nombre + ' - ' + nombre_vendor + ' - ' + estatus + ' - ' + str(dias_en_mercado) + ' publicado el: ' + str(fecha_publicacion) + ' tipo de propiedad: ' + tipo_propiedad + ' region: ' + str(region) + ' Lot mts: ' + str(lot) + ' Construction: ' + str(const) + '\n')
+        #asignamos las variables a nuestra clase
+        propiedad.code = codigo
+        propiedad.link = link
+        propiedad.name = nombre
+        propiedad.address = address 
+        propiedad.neighboorhood = str(region)
+        propiedad.agent_link = vendor_link
+        propiedad.date_listed = str(fecha_publicacion)
+        propiedad.currency = moneda
+        propiedad.market_price = str(precio)
+        propiedad.type = tipo_propiedad
+        propiedad.status = estatus
+        propiedad.mts_const = str(const)
+        propiedad.mts_lot = str(lot)
+
+        propiedad.insertar_propiedad()
+
+        log_action(str(n) + propiedad.simple_print() + '\n')
+        print(str(n) + propiedad.simple_print() + '\n')
         guardar_en_archivo('\n\n\n' + str(bloque.prettify()))
         n = n + 1

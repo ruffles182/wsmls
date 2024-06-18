@@ -3,18 +3,22 @@ import datetime
 from conection import Conect
 
 class Propiedad:
-    codigo = ""
+    code = ""
     link = ""
-    nombre = ""
-    direcion = ""
-    precio = 0
-    moneda = ""
-    tipo = ""
-    estatus = ""
-    region = ""
+    name = ""
+    address = ""
+    neighboorhood = ""
+    agent_link = ""
+    date_listed = ""
+    currency = ""
+    market_price = ""
+    type = ""
+    status = ""
+    mts_const = ""
+    mts_lot = ""
 
     def simple_print(self):
-        return str(self.codigo) + ' - ' + self.nombre + ' -> ' + self.link 
+        return str(self.code) + ' - ' + self.link + ' -> ' + self.name + '\n' + self.address + ' - ' + self.neighboorhood + ' - ' + self.agent_link + '\n' + str(self.date_listed) + ' - ' + str(self.currency) + ' - ' + str(self.market_price) + '\n' + self.type + ' - ' + self.status + ' - ' + str(self.mts_const) + ' - ' + str(self.mts_lot + '\n\n')
 
 
     def insertar_propiedad(self):
@@ -26,18 +30,18 @@ class Propiedad:
         cursor = cnx.cursor()
 
         # Verifica si el codigo ya existe
-        cursor.execute("SELECT * FROM propiedads WHERE codigo = %s", (self.codigo,))
+        cursor.execute("SELECT * FROM properties WHERE code = %s", (self.code,))
         if cursor.fetchone():
             print(f"El codigo {self.codigo} ya existe en la base de datos.")
             return "no"
 
         # Define la consulta SQL
-        query = ("INSERT INTO propiedads "
-                "(direccion, nombre, codigo, precio, moneda) "
-                "VALUES (%s, %s, %s, %s, %s)")
+        query = ("INSERT INTO properties "
+                "(code, link, name, address, neighboorhood, agent_link, date_listed, currency, market_price, type, status, mts_const, mts_lot)"
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
 
         # Define los datos a insertar
-        datos = (self.direcion, self.nombre, self.codigo, self.precio, self.moneda)
+        datos = (self.code, self.link, self.name, self.address, self.neighboorhood, self.agent_link, self.date_listed, self.currency, self.market_price, self.type, self.status, self.mts_const, self.mts_lot)
 
         # Ejecuta la consulta
         cursor.execute(query, datos)
