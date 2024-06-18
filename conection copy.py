@@ -4,3 +4,6 @@ class conect:
     db = "your_database"
     user = "root"
     password = ""
+
+class Page:
+    web = "the_site"
