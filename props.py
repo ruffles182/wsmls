@@ -49,10 +49,17 @@ class Propiedad:
         cnx.close()
         return "si"
 
+def guardar_en_archivo(texto, nombre_archivo="bloques.txt"):
+    with open(nombre_archivo, "a") as archivo:
+        archivo.write(texto)
+
 def log_action(action_message, timestamp=None):
     timestamp = timestamp if timestamp else datetime.datetime.now()
     log_message = f"{timestamp}: {action_message}"
 
     with open('log.txt', 'a') as file:
         file.write(log_message + '\n')
+
+def formato_texto(cadena):
+    return cadena.strip()
 
