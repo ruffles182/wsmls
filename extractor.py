@@ -16,11 +16,6 @@ pagina_recientes = Page.web
 
 with sync_playwright() as p:
     browser = p.chromium.launch()
-    context = browser.new_context()
-    try:
-        context = browser.new_context(storage_state="sesion/sesion.json")
-    except:
-        print('no hay archivo de contexto')
     page = browser.new_page()
     page.set_viewport_size({'width':939, 'height':720})
     page.goto(pagina_recientes)
@@ -41,7 +36,6 @@ with sync_playwright() as p:
         page.wait_for_load_state('load')
         
         time.sleep(5)
-        storage = context.storage_state(path="sesion/sesion.json")
 
     print('Sesion iniciada')
     log_action("sesion iniciada")
