@@ -14,8 +14,8 @@ class Propiedad:
     market_price = ""
     type = ""
     status = ""
-    mts_const = ""
-    mts_lot = ""
+    mts_const = 0
+    mts_lot = 0
 
     def simple_print(self):
         return str(self.code) + ' - ' + self.link + ' -> ' + self.name + '\n' + self.address + ' - ' + self.neighboorhood + ' - ' + self.agent_link + '\n' + str(self.date_listed) + ' - ' + str(self.currency) + ' - ' + str(self.market_price) + '\n' + self.type + ' - ' + self.status + ' - ' + str(self.mts_const) + ' - ' + str(self.mts_lot + '\n\n')
@@ -32,7 +32,7 @@ class Propiedad:
         # Verifica si el codigo ya existe
         cursor.execute("SELECT * FROM properties WHERE code = %s", (self.code,))
         if cursor.fetchone():
-            print(f"El codigo {self.codigo} ya existe en la base de datos.")
+            print(f"El codigo {self.code} ya existe en la base de datos.")
             return "no"
 
         # Define la consulta SQL
