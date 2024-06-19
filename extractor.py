@@ -78,13 +78,13 @@ with sync_playwright() as p:
         div_region = div_region_label.find_next_sibling('div', class_='type-value min_height_20')
         region = div_region.text.strip()
         #mts lot
-        lot = ""
+        lot = 0
         div_lot_label = codigo_raw.find('div', class_='type-name min_height_20', string=re.compile("Lot m"))
         if div_lot_label is not None:
             div_lot = div_lot_label.find_next_sibling('div', class_='type-value min_height_20')
             lot = div_lot.text.strip()
         #mts Const
-        const = ""
+        const = 0
         div_const_label = codigo_raw.find('div', class_='type-name min_height_20', string=re.compile("Construction m"))
         if div_const_label is not None:
             div_const = div_const_label.find_next_sibling('div', class_='type-value min_height_20')
@@ -120,8 +120,8 @@ with sync_playwright() as p:
         propiedad.market_price = str(precio)
         propiedad.type = tipo_propiedad
         propiedad.status = estatus
-        propiedad.mts_const = str(const)
-        propiedad.mts_lot = str(lot)
+        propiedad.mts_const = const
+        propiedad.mts_lot = lot
 
         propiedad.insertar_propiedad()
 
