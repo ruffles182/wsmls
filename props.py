@@ -18,7 +18,7 @@ class Propiedad:
     mts_lot = 0
 
     def simple_print(self):
-        return str(self.code) + ' - ' + self.link + ' -> ' + self.name + '\n' + self.address + ' - ' + self.neighboorhood + ' - ' + self.agent_link + '\n' + str(self.date_listed) + ' - ' + str(self.currency) + ' - ' + str(self.market_price) + '\n' + self.type + ' - ' + self.status + ' - ' + str(self.mts_const) + ' - ' + str(self.mts_lot + '\n\n')
+        return str(self.code) + ' -> ' + self.name + ' - ' + str(self.date_listed) + ' - ' + str(self.currency) + ' - ' + str(self.market_price) + ' - ' + self.status + '\n'
 
 
     def insertar_propiedad(self):
