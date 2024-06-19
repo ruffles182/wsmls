@@ -125,7 +125,7 @@ with sync_playwright() as p:
 
         propiedad.insertar_propiedad()
 
-        log_action(str(n) + propiedad.simple_print() + '\n')
+        log_action(str(n) + str(propiedad.simple_print()) + '\n')
         print(str(n) + propiedad.simple_print() + '\n')
         guardar_en_archivo('\n\n\n' + str(bloque.prettify()))
         n = n + 1
