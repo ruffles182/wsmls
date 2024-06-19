@@ -15,7 +15,7 @@ import time
 pagina_recientes = Page.web
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=False, slow_mo=50)
+    browser = p.chromium.launch()
     context = browser.new_context()
     try:
         context = browser.new_context(storage_state="sesion/sesion.json")
