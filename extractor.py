@@ -109,6 +109,7 @@ with sync_playwright() as p:
         propiedad.address = address 
         propiedad.neighboorhood = str(region)
         propiedad.agent_link = vendor_link
+        propiedad.agent_name = nombre_vendor
         propiedad.date_listed = str(fecha_publicacion)
         propiedad.currency = moneda
         propiedad.market_price = str(precio)
@@ -119,7 +120,7 @@ with sync_playwright() as p:
 
         propiedad.insertar_propiedad()
 
-        log_action(str(n) + str(propiedad.simple_print()) + '\n')
+        log_action(str(n) + ' - ' + str(propiedad.simple_print()) + '\n')
         print(str(n) + propiedad.simple_print() + '\n')
         guardar_en_archivo('\n\n\n' + str(bloque.prettify()))
         n = n + 1

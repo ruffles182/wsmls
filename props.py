@@ -9,6 +9,7 @@ class Propiedad:
     address = ""
     neighboorhood = ""
     agent_link = ""
+    agent_name = ""
     date_listed = ""
     currency = ""
     market_price = ""
@@ -18,7 +19,7 @@ class Propiedad:
     mts_lot = 0
 
     def simple_print(self):
-        return str(self.code) + ' -> ' + self.name + ' - ' + str(self.date_listed) + ' - ' + str(self.currency) + ' - ' + str(self.market_price) + ' - ' + self.status + '\n'
+        return str(self.code) + ' -> ' + self.name + ' - ' + str(self.date_listed) + ' - ' + str(self.currency) + ' - ' + str(self.market_price) + ' - ' + self.status'
 
 
     def insertar_propiedad(self):
@@ -37,8 +38,8 @@ class Propiedad:
 
         # Define la consulta SQL
         query = ("INSERT INTO properties "
-                "(code, link, name, address, neighboorhood, agent_link, date_listed, currency, market_price, type, status, mts_const, mts_lot)"
-                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                "(code, link, name, address, neighboorhood, agent_link, agent_name, date_listed, currency, market_price, type, status, mts_const, mts_lot)"
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
         #validamos que mts_lot no esté vacio
         if not isinstance(self.mts_lot, (int, float)) or self.mts_lot is None:
             self.mts_lot = 0
@@ -46,7 +47,7 @@ class Propiedad:
             self.mts_lot = self.mts_lot
 
         # Define los datos a insertar
-        datos = (self.code, self.link, self.name, self.address, self.neighboorhood, self.agent_link, self.date_listed, self.currency, self.market_price, self.type, self.status, self.mts_const, self.mts_lot)
+        datos = (self.code, self.link, self.name, self.address, self.neighboorhood, self.agent_link, self.agent_name, self.date_listed, self.currency, self.market_price, self.type, self.status, self.mts_const, self.mts_lot)
 
         # Ejecuta la consulta
         cursor.execute(query, datos)
