@@ -33,8 +33,8 @@ class Propiedad:
         # Verifica si el codigo ya existe
         cursor.execute("SELECT * FROM properties WHERE code = %s", (self.code,))
         if cursor.fetchone():
-            print(f"El codigo {self.code} ya existe en la base de datos.")
-            return "no"
+            # print(f"El codigo {self.code} ya existe en la base de datos.")
+            return False
 
         # Define la consulta SQL
         query = ("INSERT INTO properties "
@@ -57,7 +57,7 @@ class Propiedad:
 
         cursor.close()
         cnx.close()
-        return "si"
+        return True
 
 def guardar_en_archivo(texto, nombre_archivo="bloques.txt"):
     with open(nombre_archivo, "a") as archivo:
