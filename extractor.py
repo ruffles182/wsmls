@@ -16,7 +16,7 @@ import time
 import sys
 
 pagina_recientes = Page.web
-tipo_validado = ['Residential']
+tipo_validado = ['Residential', 'Land and Lots', 'Commercial']
 repeticiones = 1
 
 if len(sys.argv) > 1:
