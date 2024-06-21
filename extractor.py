@@ -28,8 +28,9 @@ ahora = datetime.now()
 fecha_hora = ahora.strftime("%Y-%m-%d %H:%M:%S")
 print(fecha_hora)
 for numero_pagina in range(repeticiones):
-    print('iteracion ' + str(numero_pagina + 1) + " de: " + str(repeticiones))
     pagina_recientes = pagina_recientes + str(numero_pagina+1)
+    print(pagina_recientes)
+    print('iteracion ' + str(numero_pagina + 1) + " de: " + str(repeticiones))
 
     with sync_playwright() as p:
         browser = p.chromium.launch()
