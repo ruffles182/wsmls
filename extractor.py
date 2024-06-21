@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
@@ -168,3 +170,4 @@ for numero_pagina in range(repeticiones):
 
 output_finalizado = "se agregaron " + str(len(propiedades_agregadas)) + ' nuevas propiedades' if len(propiedades_agregadas) > 0 else 'no se agregaron nuevas propiedades'
 print('Finalizado: ' + output_finalizado)
+log_action('Finalizado: ' + output_finalizado)
