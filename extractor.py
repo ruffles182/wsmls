@@ -18,6 +18,7 @@ import sys
 pagina_recientes = Page.web
 tipo_validado = ['Residential', 'Land and Lots', 'Commercial']
 repeticiones = 1
+contador = 1
 
 if len(sys.argv) > 1:
     repeticiones = int(sys.argv[1])
@@ -170,6 +171,7 @@ for numero_pagina in range(repeticiones):
 
             guardar_en_archivo('\n\n\n' + str(bloque.prettify()))
 
+    contador = contador + 1
     time.sleep(60)
 
 output_finalizado = "se agregaron " + str(len(propiedades_agregadas)) + ' nuevas propiedades' if len(propiedades_agregadas) > 0 else 'no se agregaron nuevas propiedades'
