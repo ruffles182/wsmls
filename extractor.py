@@ -29,7 +29,7 @@ ahora = datetime.now()
 fecha_hora = ahora.strftime("%Y-%m-%d %H:%M:%S")
 print(fecha_hora)
 for numero_pagina in range(repeticiones):
-    pagina_recientes = pagina_recientes + str(numero_pagina+1)
+    pagina_recientes = pagina_recientes + str(contador)
     print(pagina_recientes)
     print('iteracion ' + str(numero_pagina + 1) + " de: " + str(repeticiones))
 
