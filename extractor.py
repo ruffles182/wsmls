@@ -24,6 +24,9 @@ if len(sys.argv) > 1:
 
 propiedades_agregadas = []
 
+ahora = datetime.now()
+fecha_hora = ahora.strftime("%Y-%m-%d %H:%M:%S")
+print(fecha_hora)
 for numero_pagina in range(repeticiones):
     print('iteracion ' + str(numero_pagina + 1) + " de: " + str(repeticiones))
     pagina_recientes = pagina_recientes + str(numero_pagina+1)
