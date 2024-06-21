@@ -18,7 +18,6 @@ import sys
 pagina_recientes = Page.web
 tipo_validado = ['Residential', 'Land and Lots', 'Commercial']
 repeticiones = 1
-contador = 1
 
 if len(sys.argv) > 1:
     repeticiones = int(sys.argv[1])
@@ -29,15 +28,15 @@ ahora = datetime.now()
 fecha_hora = ahora.strftime("%Y-%m-%d %H:%M:%S")
 print(fecha_hora)
 for numero_pagina in range(repeticiones):
-    pagina_recientes = pagina_recientes + str(contador)
-    print(pagina_recientes)
+    pagina_actual = pagina_recientes + str(numero_pagina)
+    print(pagina_actual)
     print('iteracion ' + str(numero_pagina + 1) + " de: " + str(repeticiones))
 
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page()
         page.set_viewport_size({'width':939, 'height':720})
-        page.goto(pagina_recientes)
+        page.goto(pagina_actual)
 
 
         usuario_input = page.get_by_placeholder("Username")
@@ -58,7 +57,7 @@ for numero_pagina in range(repeticiones):
 
         print('Sesion iniciada')
         log_action("sesion iniciada")
-        page.goto(pagina_recientes)
+        page.goto(pagina_actual)
         time.sleep(5)
         html = page.inner_html('.container')
         soup = BeautifulSoup(html, 'html.parser')
@@ -171,7 +170,6 @@ for numero_pagina in range(repeticiones):
 
             guardar_en_archivo('\n\n\n' + str(bloque.prettify()))
 
-    contador = contador + 1
     time.sleep(60)
 
 output_finalizado = "se agregaron " + str(len(propiedades_agregadas)) + ' nuevas propiedades' if len(propiedades_agregadas) > 0 else 'no se agregaron nuevas propiedades'
