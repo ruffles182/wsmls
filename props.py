@@ -167,7 +167,7 @@ def texto_correo_extractor(propiedades):
                     <h1>{propiedad.code}</h1>
                     <p><a href='{propiedad.link}'>{propiedad.name}</a></p>
                     <p><b>Adress: </n>{propiedad.address}</p>
-                    <p><b>Price: {propiedad.currency}</b> <span style='color: #FF5D35'>$ {propiedad.price}</span></p>
+                    <p><b>Price: {propiedad.currency}</b> <span style='color: #FF5D35'>$ {propiedad.market_price}</span></p>
                     <p><b>Neighboorhood:</b>{propiedad.neighboorhood}</p>
                 </div>
         """
