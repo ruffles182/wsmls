@@ -50,20 +50,20 @@ class Propiedad:
         else:
             self.mts_lot = self.mts_lot
 
-        print('primer val: ' + str(self.mts_lot) ' \n')
+        print('primer val: ' + str(self.mts_lot) + '\n')
 
         try:
             self.mts_lot = float(self.mts_lot) if self.mts_lot else 0
         except ValueError:
             self.mts_lot = 0  # Asumir 0 si la conversión falla
-        print('segundo val: ' + str(self.mts_lot) ' \n')
+        print('segundo val: ' + str(self.mts_lot) + '\n')
 
         # Asumiendo que mts_const también necesita ser un número
         try:
             self.mts_lot = float(self.mts_lot) if self.mts_lot is not None and self.mts_lot != "" else 0
         except ValueError:
             self.mts_lot = 0
-        print('tercer val: ' + str(self.mts_lot) ' \n')
+        print('tercer val: ' + str(self.mts_lot) + '\n')
 
 
         #validamos que mts_const no esté vacio
