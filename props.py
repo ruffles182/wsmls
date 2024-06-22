@@ -45,7 +45,7 @@ class Propiedad:
         print('class lot: ' + str(self.mts_lot) + '\n')
 
         #validamos que mts_lot no esté vacio
-        if not isinstance(self.mts_lot, (int, float)) or self.mts_lot is None:
+        if self.mts_lot is None:
             self.mts_lot = 0
         else:
             self.mts_lot = self.mts_lot
