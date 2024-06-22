@@ -103,6 +103,7 @@ class EmailSend:
     receiver = ""
     subject = ""
     message = ""
+    show_from = ''
 
     def send_email(self,sub,msg):
         edata = EmailData()
@@ -110,10 +111,11 @@ class EmailSend:
         self.receiver = edata.email_receiver
         self.subject = sub
         self.message = msg
+        self.show_from = edata.email_from
 
          # Crear un mensaje MIMEMultipart
         message = MIMEMultipart()
-        message['From'] = self.email
+        message['From'] = self.show_from
         message['To'] = self.receiver
         message['Subject'] = self.subject
 
