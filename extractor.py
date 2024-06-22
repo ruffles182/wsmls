@@ -99,6 +99,7 @@ for numero_pagina in range(repeticiones):
             if div_lot_label is not None:
                 div_lot = div_lot_label.find_next_sibling('div', class_='type-value min_height_20')
                 lot = div_lot.text.strip()
+            print("scrap lotm: " + str(lot) + '\n')
             #mts Const
             const = 0
             div_const_label = codigo_raw.find('div', class_='type-name min_height_20', string=re.compile("Construction m"))

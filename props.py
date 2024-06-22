@@ -41,6 +41,9 @@ class Propiedad:
                 "(code, link, name, address, neighboorhood, agent_link, agent_name, date_listed, currency, market_price, type, status, mts_const, mts_lot)"
                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
         # Validación y conversión de mts_lot y  mts_const
+
+        print('class lot: ' + str(self.mts_lot) + '\n')
+
         #validamos que mts_lot no esté vacio
         if not isinstance(self.mts_lot, (int, float)) or self.mts_lot is None:
             self.mts_lot = 0
