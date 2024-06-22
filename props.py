@@ -57,9 +57,11 @@ class Propiedad:
 
         # Asumiendo que mts_const también necesita ser un número
         try:
-            self.mts_const = float(self.mts_const) if self.mts_const else 0
+            self.mts_lot = float(self.mts_lot) if self.mts_lot else 0
         except ValueError:
-            self.mts_const = 0  # Asumir 0 si la conversión falla
+            self.mts_lot = 0  # Asumir 0 si la conversión falla
+
+
         #validamos que mts_const no esté vacio
         if not isinstance(self.mts_const, (int, float)) or self.mts_const is None:
             self.mts_const = 0
@@ -73,9 +75,9 @@ class Propiedad:
 
         # Asumiendo que mts_const también necesita ser un número
         try:
-            self.mts_lot = float(self.mts_lot) if self.mts_lot else 0
+            self.mts_const = float(self.mts_const) if self.mts_const else 0
         except ValueError:
-            self.mts_lot = 0  # Asumir 0 si la conversión falla
+            self.mts_const = 0  # Asumir 0 si la conversión falla
 
         # Define los datos a insertar
         datos = (self.code, self.link, self.name, self.address, self.neighboorhood, self.agent_link, self.agent_name, self.date_listed, self.currency, self.market_price, self.type, self.status, self.mts_const, self.mts_lot)

@@ -98,14 +98,14 @@ for numero_pagina in range(repeticiones):
             div_lot_label = codigo_raw.find('div', class_='type-name min_height_20', string=re.compile("Lot m"))
             if div_lot_label is not None:
                 div_lot = div_lot_label.find_next_sibling('div', class_='type-value min_height_20')
-                lot = div_lot.text.strip()
+                lot = int(div_lot.text.strip())
             print("scrap lotm: " + str(lot) + '\n')
             #mts Const
             const = 0
             div_const_label = codigo_raw.find('div', class_='type-name min_height_20', string=re.compile("Construction m"))
             if div_const_label is not None:
                 div_const = div_const_label.find_next_sibling('div', class_='type-value min_height_20')
-                const = div_const.text.strip()
+                const = int(div_const.text.strip())
             #Dirección
             address_raw = codigo_raw.find('p', class_='address m-1')
             address = address_raw.text.strip()
@@ -171,7 +171,6 @@ for numero_pagina in range(repeticiones):
 
             guardar_en_archivo('\n\n\n' + str(bloque.prettify()))
 
-    time.sleep(60)
 
 output_finalizado = "se agregaron " + str(len(propiedades_agregadas)) + ' nuevas propiedades' if len(propiedades_agregadas) > 0 else 'no se agregaron nuevas propiedades'
 print('Finalizado: ' + output_finalizado)
