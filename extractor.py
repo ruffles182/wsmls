@@ -4,9 +4,12 @@ from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
 from props import Propiedad
+from props import EmailSend
 from props import guardar_en_archivo
 from props import formato_texto
 from props import log_action
+from props import texto_correo_extractor
+from props import formato_link
 
 from conection import Page
 
@@ -99,7 +102,7 @@ for numero_pagina in range(repeticiones):
             if div_lot_label is not None:
                 div_lot = div_lot_label.find_next_sibling('div', class_='type-value min_height_20')
                 lot = div_lot.text.strip()
-                
+
             #mts Const
             const = 0
             div_const_label = codigo_raw.find('div', class_='type-name min_height_20', string=re.compile("Construction m"))
@@ -140,11 +143,11 @@ for numero_pagina in range(repeticiones):
 
             #asignamos las variables a nuestra clase
             propiedad.code = codigo
-            propiedad.link = link
+            propiedad.link = formato_link(link)
             propiedad.name = nombre
             propiedad.address = address 
             propiedad.neighboorhood = str(region)
-            propiedad.agent_link = vendor_link
+            propiedad.agent_link = formato_link(vendor_link)
             propiedad.agent_name = nombre_vendor
             propiedad.date_listed = str(fecha_publicacion)
             propiedad.currency = moneda
@@ -173,5 +176,11 @@ for numero_pagina in range(repeticiones):
 
 
 output_finalizado = "se agregaron " + str(len(propiedades_agregadas)) + ' nuevas propiedades' if len(propiedades_agregadas) > 0 else 'no se agregaron nuevas propiedades'
+correo = EmailSend()
+try:
+    correo.send_email('nuevas propiedades registradas', texto_correo_extractor(propiedades_agregadas))
+except:
+    pass
+
 print('Finalizado: ' + output_finalizado)
 log_action('Finalizado: ' + output_finalizado)
