@@ -67,7 +67,7 @@ class Propiedad:
 
 
         #validamos que mts_const no esté vacio
-        if not isinstance(self.mts_const, (int, float)) or self.mts_const is None:
+        if self.mts_const is None:
             self.mts_const = 0
         else:
             self.mts_const = self.mts_const
