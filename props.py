@@ -163,11 +163,10 @@ def texto_correo_extractor(propiedades):
 
     for propiedad in propiedades:
         cadena_propiedades = cadena_propiedades + f"""
-                <div>
-                    <h1>{propiedad.code}</h1>
-                    <p><a href='{propiedad.link}'>{propiedad.name}</a></p>
+                <div style='padding-top: 30px'>
+                    <h1><a href='{propiedad.link}'>{propiedad.code} - {propiedad.name}</a></h1>
                     <p><b>Adress: </n>{propiedad.address}</p>
-                    <p><b>Price: {propiedad.currency}</b> <span style='color: #FF5D35'>$ {propiedad.market_price}</span></p>
+                    <p><b>Price: {propiedad.currency}</b> <span style='color: #FF5D35'>$ {format(propiedad.market_price, ",")}</span></p>
                     <p><b>Neighboorhood:</b>{propiedad.neighboorhood}</p>
                 </div>
         """
