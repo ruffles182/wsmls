@@ -147,7 +147,7 @@ def formato_texto(cadena):
 
 def formato_link(cadena):
     pag = Page()
-    return cadena + pag.web_format
+    return pag.web_format + cadena
 
 def texto_correo_extractor(propiedades):
     cantidad_propiedades = len(propiedades)
