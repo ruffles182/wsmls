@@ -179,8 +179,8 @@ output_finalizado = "se agregaron " + str(len(propiedades_agregadas)) + ' nuevas
 correo = EmailSend()
 try:
     correo.send_email('nuevas propiedades registradas', texto_correo_extractor(propiedades_agregadas))
-except:
-    pass
+except Exception as e:
+    print(f'ocurrió un problema al enviar el email: {e}')
 
 print('Finalizado: ' + output_finalizado)
 log_action('Finalizado: ' + output_finalizado)
