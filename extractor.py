@@ -125,7 +125,7 @@ for numero_pagina in range(repeticiones):
 
             #Nombre de propiedad y de vendedor, y links 
             links = codigo_raw.find_all('a')
-            link = str(links[6].get('href'))
+            link = str(links[0].get('href'))
 
             nombre=""
             try:
@@ -143,7 +143,7 @@ for numero_pagina in range(repeticiones):
 
             #asignamos las variables a nuestra clase
             propiedad.code = codigo
-            propiedad.link = formato_link(link)
+            propiedad.link = link
             propiedad.name = nombre
             propiedad.address = address 
             propiedad.neighboorhood = str(region)
@@ -157,7 +157,9 @@ for numero_pagina in range(repeticiones):
             propiedad.mts_const = const
             propiedad.mts_lot = lot
 
-            if tipo_propiedad in tipo_validado:
+            valido = propiedad.name != ""
+
+            if tipo_propiedad in tipo_validado and valido:
                 if propiedad.insertar_propiedad(): 
                     #agregar propiedades a array para mostrar al final y enviar correo
                     propiedades_agregadas.append(propiedad)
@@ -165,22 +167,23 @@ for numero_pagina in range(repeticiones):
                     log_action('Se agregó ' + str(propiedad.simple_print()))
                     print('Se agregó ' + str(propiedad.simple_print()))
                 else:
-                    log_action('El registro ' + str(codigo) + ' ya existe')
-                    print('El registro ' + str(codigo) + ' ya existe')
+                    log_action('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' -> ' + propiedad.link + ' ya existe')
+                    print('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' -> ' + propiedad.link + ' ya existe')
 
             else:
-                log_action('El registro ' + str(codigo) + ' no coincide con los criterios de búsqueda')
-                print('El registro ' + str(codigo) + ' no coincide con los criterios de búsqueda')
+                log_action('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' -> ' + propiedad.link + ' no coincide con los criterios de búsqueda')
+                print('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' -> ' + propiedad.link + ' no coincide con los criterios de búsqueda')
 
             guardar_en_archivo('\n\n\n' + str(bloque.prettify()))
 
 
 output_finalizado = "se agregaron " + str(len(propiedades_agregadas)) + ' nuevas propiedades' if len(propiedades_agregadas) > 0 else 'no se agregaron nuevas propiedades'
-correo = EmailSend()
-try:
-    correo.send_email('nuevas propiedades registradas', texto_correo_extractor(propiedades_agregadas))
-except Exception as e:
-    print(f'ocurrió un problema al enviar el email: {e}')
+if len(propiedades_agregadas) > 0:
+    correo = EmailSend()
+    try:
+        correo.send_email('nuevas propiedades registradas', texto_correo_extractor(propiedades_agregadas))
+    except Exception as e:
+        print(f'ocurrió un problema al enviar el email: {e}')
 
 print('Finalizado: ' + output_finalizado)
 log_action('Finalizado: ' + output_finalizado)
