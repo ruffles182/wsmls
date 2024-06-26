@@ -167,12 +167,12 @@ for numero_pagina in range(repeticiones):
                     log_action('Se agregó ' + str(propiedad.simple_print()))
                     print('Se agregó ' + str(propiedad.simple_print()))
                 else:
-                    log_action('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' -> ' + propiedad.link + ' ya existe')
-                    print('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' -> ' + propiedad.link + ' ya existe')
+                    log_action('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + ' ya existe')
+                    print('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + ' ya existe')
 
             else:
-                log_action('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' -> ' + propiedad.link + ' no coincide con los criterios de búsqueda')
-                print('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' -> ' + propiedad.link + ' no coincide con los criterios de búsqueda')
+                log_action('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + ' no coincide con los criterios de búsqueda')
+                print('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + ' no coincide con los criterios de búsqueda')
 
             guardar_en_archivo('\n\n\n' + str(bloque.prettify()))
 
