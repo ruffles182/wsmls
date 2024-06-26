@@ -127,6 +127,9 @@ for numero_pagina in range(repeticiones):
             links = codigo_raw.find_all('a')
             link = str(links[0].get('href'))
 
+            # for l in links:
+            #     print(str(l) + '\n')
+
             nombre=""
             try:
                 nombre = str(links[6].get_text(strip=True))[10:]
@@ -143,7 +146,7 @@ for numero_pagina in range(repeticiones):
 
             #asignamos las variables a nuestra clase
             propiedad.code = codigo
-            propiedad.link = link
+            propiedad.link = formato_link(link)
             propiedad.name = nombre
             propiedad.address = address 
             propiedad.neighboorhood = str(region)
@@ -168,7 +171,7 @@ for numero_pagina in range(repeticiones):
                     print('Se agregó ' + str(propiedad.simple_print()))
                 else:
                     log_action('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + ' ya existe')
-                    print('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + ' ya existe')
+                    print('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + link + ' ya existe')
 
             else:
                 log_action('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + ' no coincide con los criterios de búsqueda')
@@ -178,12 +181,12 @@ for numero_pagina in range(repeticiones):
 
 
 output_finalizado = "se agregaron " + str(len(propiedades_agregadas)) + ' nuevas propiedades' if len(propiedades_agregadas) > 0 else 'no se agregaron nuevas propiedades'
-if len(propiedades_agregadas) > 0:
-    correo = EmailSend()
-    try:
-        correo.send_email('nuevas propiedades registradas', texto_correo_extractor(propiedades_agregadas))
-    except Exception as e:
-        print(f'ocurrió un problema al enviar el email: {e}')
+# if len(propiedades_agregadas) > 0:
+#     correo = EmailSend()
+#     try:
+#         correo.send_email('nuevas propiedades registradas', texto_correo_extractor(propiedades_agregadas))
+#     except Exception as e:
+#         print(f'ocurrió un problema al enviar el email: {e}')
 
 print('Finalizado: ' + output_finalizado)
 log_action('Finalizado: ' + output_finalizado)
