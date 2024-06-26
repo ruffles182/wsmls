@@ -107,6 +107,7 @@ class EmailSend:
     subject = ""
     message = ""
     show_from = ''
+    cc = ""
 
     def send_email(self,sub,msg):
         edata = EmailData()
@@ -115,12 +116,14 @@ class EmailSend:
         self.subject = sub
         self.message = msg
         self.show_from = edata.email_from
+        self.cc = edata.email_cc
 
          # Crear un mensaje MIMEMultipart
         message = MIMEMultipart()
         message['From'] = self.show_from
         message['To'] = self.receiver
         message['Subject'] = self.subject
+        message['Cc'] = self.cc
 
         # Asegúrate de que el tipo MIME es 'html'
         html_content = MIMEText(msg, 'html')
@@ -129,7 +132,7 @@ class EmailSend:
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
         server.login(self.email, edata.app_password)
-        server.send_message(message)
+        server.send_message(message,to_addrs=[self.receiver, self.cc])
         server.quit()
 
         print('se envió el email a: ' + self.receiver)
