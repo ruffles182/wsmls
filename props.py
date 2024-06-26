@@ -8,6 +8,8 @@ from conection import Conect
 from conection import EmailData
 from conection import Page
 
+
+##Clase propiedad ######################################################################
 class Propiedad:
     code = ""
     link = ""
@@ -97,7 +99,8 @@ class Propiedad:
         cursor.close()
         cnx.close()
         return True
-    
+
+##Clase Email ##########################################################################################################
 class EmailSend:
     email = ""
     receiver = ""
@@ -131,6 +134,8 @@ class EmailSend:
 
         print('se envió el email a: ' + self.receiver)
 
+
+##Funciones ################################################################################
 def guardar_en_archivo(texto, nombre_archivo="bloques.txt"):
     with open(nombre_archivo, "a") as archivo:
         archivo.write(texto)
@@ -172,4 +177,5 @@ def texto_correo_extractor(propiedades):
         """
     return cadena_inicio + cadena_propiedades + cadena_final 
 
-
+def check_empty_names(obj_list):
+    return all(obj.name == "" for obj in obj_list)

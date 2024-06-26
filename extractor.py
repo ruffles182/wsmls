@@ -10,6 +10,7 @@ from props import formato_texto
 from props import log_action
 from props import texto_correo_extractor
 from props import formato_link
+from props import check_empty_names
 
 from conection import Page
 
@@ -21,11 +22,14 @@ import sys
 pagina_recientes = Page.web
 tipo_validado = ['Residential', 'Land and Lots', 'Commercial']
 repeticiones = 1
+repeticiones_si_vacio = 1
+limite_si_vacio = 5
 
 if len(sys.argv) > 1:
     repeticiones = int(sys.argv[1])
 
 propiedades_agregadas = []
+propiedades_total = []
 
 ahora = datetime.now()
 fecha_hora = ahora.strftime("%Y-%m-%d %H:%M:%S")
@@ -61,7 +65,7 @@ for numero_pagina in range(repeticiones):
         print('Sesion iniciada')
         log_action("sesion iniciada")
         page.goto(pagina_actual)
-        time.sleep(10)
+        time.sleep(15)
         html = page.inner_html('.container')
         soup = BeautifulSoup(html, 'html.parser')
         propiedades_bloque = soup.find_all('li', {'class': 'featured'})
@@ -160,8 +164,9 @@ for numero_pagina in range(repeticiones):
             propiedad.mts_const = const
             propiedad.mts_lot = lot
 
-            valido = propiedad.name != ""
+            propiedades_total.append(propiedad)
 
+            valido = propiedad.name != ""
             if tipo_propiedad in tipo_validado and valido:
                 if propiedad.insertar_propiedad(): 
                     #agregar propiedades a array para mostrar al final y enviar correo
@@ -179,6 +184,7 @@ for numero_pagina in range(repeticiones):
 
             guardar_en_archivo('\n\n\n' + str(bloque.prettify()))
 
+    numero_pagina = numero_pagina - 1 if check_empty_names(propiedades_total) and repeticiones_si_vacio < limite_si_vacio else numero_pagina
 
 output_finalizado = "se agregaron " + str(len(propiedades_agregadas)) + ' nuevas propiedades' if len(propiedades_agregadas) > 0 else 'no se agregaron nuevas propiedades'
 if len(propiedades_agregadas) > 0:
