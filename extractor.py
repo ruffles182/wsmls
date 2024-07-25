@@ -11,6 +11,7 @@ from props import log_action
 from props import texto_correo_extractor
 from props import formato_link
 from props import check_empty_names
+from props import geolocalizar
 
 from conection import Page
 
@@ -163,6 +164,7 @@ for numero_pagina in range(repeticiones):
             propiedad.status = estatus
             propiedad.mts_const = const
             propiedad.mts_lot = lot
+            propiedad.map_link = geolocalizar(propiedad.address)  if propiedad.address != "" else ""
 
             propiedades_total.append(propiedad)
 
