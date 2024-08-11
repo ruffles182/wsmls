@@ -260,7 +260,7 @@ def texto_correo_extractor(propiedades):
                 </div>
         """
     return cadena_inicio + cadena_propiedades + cadena_final 
-def texto_correo_extractor():
+def texto_correo_extractor(propiedades):
     cantidad_propiedades = len(propiedades)
     cadena_propiedades = ""
     
