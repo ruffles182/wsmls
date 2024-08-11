@@ -539,3 +539,24 @@ def get_properties_id_by_code(property_code):
         return str(result[0])
     else:
         return "No se encontró el ID para el estado dado."
+    
+def actualizar_status():
+    conn = conectar()
+    cursor = conn.cursor()
+
+    # Seleccionar todos los registros de la tabla properties
+    cursor.execute("SELECT id, status FROM properties")
+    properties = cursor.fetchall()
+
+    # Actualizar cada registro con el status_id correspondiente
+    for prop in properties:
+        status_id = get_status_id_by_name(prop[1])
+        if status_id is not None:
+            cursor.execute("UPDATE properties SET status_id = %s WHERE id = %s", (status_id, prop[0]))
+
+    # Guardar los cambios
+    conn.commit()
+
+    # Cerrar la conexión
+    cursor.close()
+    conn.close()    
