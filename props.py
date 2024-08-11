@@ -7,7 +7,9 @@ from email.mime.text import MIMEText
 import googlemaps
 from playwright.sync_api import sync_playwright
 
+import subprocess
 import datetime
+import os
 
 from conection import Conect
 from conection import EmailData
@@ -560,3 +562,28 @@ def actualizar_status():
     # Cerrar la conexión
     cursor.close()
     conn.close()    
+
+def realizar_backup(usuario, nombre_db, directorio_backup):
+    # Crear el nombre del archivo basado en la fecha y hora actual
+    fecha_hora = datetime.now().strftime("%Y-%m-%d-%H%M%S")
+    archivo_backup = f"{directorio_backup}/fecha-hora-backup-{fecha_hora}.sql"
+
+    # Realizar el backup
+    try:
+        comando_backup = f"mysqldump -u {usuario} -p {nombre_db} > {archivo_backup}"
+        subprocess.run(comando_backup, shell=True, check=True)
+        log_action(f"Backup realizado con éxito en {archivo_backup}", None, "backupDB.log")
+    except subprocess.CalledProcessError:
+        log_action("Error al realizar el backup", None, "backupDB.log")
+
+    # Eliminar archivos antiguos si hay más de 20
+    try:
+        # Listar los archivos en el directorio de backup
+        archivos = sorted([f for f in os.listdir(directorio_backup) if f.endswith(".sql")])
+        
+        # Mantener solo los últimos 20 archivos
+        while len(archivos) > 200:
+            os.remove(os.path.join(directorio_backup, archivos.pop(0)))
+        log_action("Archivos antiguos eliminados correctamente.", None, "backupDB.log")
+    except Exception as e:
+        log_action(f"Error al eliminar archivos antiguos: {e}", None, "backupDB.log")
