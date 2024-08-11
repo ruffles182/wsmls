@@ -9,6 +9,7 @@ from playwright.sync_api import sync_playwright
 
 import subprocess
 import datetime
+from datetime import datetime
 import os
 
 from conection import Conect
