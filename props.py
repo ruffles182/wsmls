@@ -1,6 +1,5 @@
 import mysql.connector
 from datetime import datetime, timedelta
-from datetime import datetime
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -228,7 +227,7 @@ def guardar_en_archivo(texto, nombre_archivo="bloques.txt"):
         archivo.write(texto)
 
 def log_action(action_message, timestamp=None, file = 'log.txt'):
-    timestamp = timestamp if timestamp else datetime.datetime.now()
+    timestamp = timestamp if timestamp else datetime.now()
     log_message = f"{timestamp}: {action_message}"
 
     with open(file, 'a') as file:
