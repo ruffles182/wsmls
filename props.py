@@ -1,5 +1,4 @@
 import mysql.connector
-import datetime
 from datetime import datetime, timedelta
 from datetime import datetime
 import smtplib
@@ -7,6 +6,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import googlemaps
 from playwright.sync_api import sync_playwright
+
+import datetime
 
 from conection import Conect
 from conection import EmailData

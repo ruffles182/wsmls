@@ -12,6 +12,8 @@ from props import texto_correo_extractor
 from props import formato_link
 from props import check_empty_names
 from props import geolocalizar
+from props import insert_status_change
+from props import get_status_id_by_name
 
 from conection import Page
 
@@ -25,6 +27,10 @@ tipo_validado = ['Residential', 'Land and Lots', 'Commercial']
 repeticiones = 1
 repeticiones_si_vacio = 1
 limite_si_vacio = 5
+islogin = False
+#continuar buscando
+continuar = True 
+numero_pagina = 1
 
 if len(sys.argv) > 1:
     repeticiones = int(sys.argv[1])
@@ -34,13 +40,11 @@ propiedades_total = []
 
 ahora = datetime.now()
 fecha_hora = ahora.strftime("%Y-%m-%d %H:%M:%S")
-print(fecha_hora)
-for numero_pagina in range(repeticiones):
-    pagina_actual = pagina_recientes + str(numero_pagina+1)
-    print(pagina_actual)
-    print('iteracion ' + str(numero_pagina + 1) + " de: " + str(repeticiones))
+log_action(fecha_hora)
 
-    with sync_playwright() as p:
+with sync_playwright() as p:
+    if not islogin:
+        pagina_actual = pagina_recientes + str(numero_pagina)
         browser = p.chromium.launch()
         page = browser.new_page()
         page.set_viewport_size({'width':939, 'height':720})
@@ -49,7 +53,6 @@ for numero_pagina in range(repeticiones):
 
         usuario_input = page.get_by_placeholder("Username")
         if usuario_input is not None:
-            print("iniciando sesión")
             log_action("iniciando sesión")
             page.wait_for_load_state('load')
             page.locator("#btl-panel-login").click()
@@ -62,11 +65,14 @@ for numero_pagina in range(repeticiones):
             page.wait_for_load_state('load')
             
             time.sleep(5)
+            islogin = True
+        log_action('Sesion iniciada')
 
-        print('Sesion iniciada')
-        log_action("sesion iniciada")
+    while (continuar):
+        pagina_actual = pagina_recientes + str(numero_pagina)
+        log_action(pagina_actual)
+        log_action('iteracion ' + str(numero_pagina) + " de: " + str(repeticiones))
         page.goto(pagina_actual)
-        time.sleep(15)
         html = page.inner_html('.container')
         soup = BeautifulSoup(html, 'html.parser')
         propiedades_bloque = soup.find_all('li', {'class': 'featured'})
@@ -118,7 +124,11 @@ for numero_pagina in range(repeticiones):
             address_raw = codigo_raw.find('p', class_='address m-1')
             address = address_raw.text.strip()
             #price
-            span_precio_raw = codigo_raw.find('span', class_='price_original')
+            #price
+            span_precio_raw = codigo_raw.find('span', class_='price')
+            if (span_precio_raw is None):
+                span_precio_raw = codigo_raw.find('span', class_='price_original')
+
             precio = 0
             moneda = ""
             try:
@@ -137,9 +147,6 @@ for numero_pagina in range(repeticiones):
             #Nombre de propiedad y de vendedor, y links 
             links = codigo_raw.find_all('a')
             link = str(links[0].get('href'))
-
-            # for l in links:
-            #     print(str(l) + '\n')
 
             nombre=""
             try:
@@ -181,18 +188,19 @@ for numero_pagina in range(repeticiones):
                     propiedades_agregadas.append(propiedad)
                     #info log hacer de esto una sola funcion
                     log_action('Se agregó ' + str(propiedad.simple_print()))
-                    print('Se agregó ' + str(propiedad.simple_print()))
+                    #creamos los status_changes y actualizamos los campos en properties
+                    
                 else:
                     log_action('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + ' ya existe')
-                    print('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + link + ' ya existe')
 
             else:
                 log_action('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + ' no coincide con los criterios de búsqueda')
-                print('El registro ' + str(propiedad.code) + ' - ' + propiedad.name + ' ->  ' + ' no coincide con los criterios de búsqueda')
 
-            guardar_en_archivo('\n\n\n' + str(bloque.prettify()))
 
-    numero_pagina = numero_pagina - 1 if check_empty_names(propiedades_total) and repeticiones_si_vacio < limite_si_vacio else numero_pagina
+        # numero_pagina = numero_pagina - 1 if check_empty_names(propiedades_total) and repeticiones_si_vacio < limite_si_vacio else numero_pagina
+
+        numero_pagina = numero_pagina + 1
+        continuar = False if numero_pagina > repeticiones else True
 
 output_finalizado = "se agregaron " + str(len(propiedades_agregadas)) + ' nuevas propiedades' if len(propiedades_agregadas) > 0 else 'no se agregaron nuevas propiedades'
 if len(propiedades_agregadas) > 0:
@@ -200,7 +208,6 @@ if len(propiedades_agregadas) > 0:
     try:
         correo.send_email('nuevas propiedades registradas', texto_correo_extractor(propiedades_agregadas))
     except Exception as e:
-        print(f'ocurrió un problema al enviar el email: {e}')
+        log_action(f'ocurrió un problema al enviar el email: {e}')
 
-print('Finalizado: ' + output_finalizado)
 log_action('Finalizado: ' + output_finalizado)
