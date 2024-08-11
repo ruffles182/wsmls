@@ -125,6 +125,12 @@ for numero_pagina in range(repeticiones):
                 span_precio = span_precio_raw.text.strip()
                 precio = re.sub(r'[^\d]', '', str(span_precio))
                 moneda = span_precio[:3]
+
+                if (precio == 0 and moneda == ""):
+                    span_precio_raw = codigo_raw.find('span', class_='price')
+                    span_precio = span_precio_raw.text.strip()
+                    precio = re.sub(r'[^\d]', '', str(span_precio))
+                    moneda = span_precio[:3]
             except:
                 pass
 

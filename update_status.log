@@ -1,0 +1,50 @@
+2024-08-11 07:01:09.894166: inicializando status Updater
+2024-08-11 07:02:24.275186: inicializando status Updater
+2024-08-11 07:02:30.679678: iniciando sesión
+2024-08-11 07:02:38.991716: Sesion iniciada
+2024-08-11 07:02:58.434382: página actual: https://www.chapalamls.net/en/properties/recently-added/page-1
+2024-08-11 07:02:58.684314: terminado bloque 1
+2024-08-11 07:03:18.488608: página actual: https://www.chapalamls.net/en/properties/recently-added/page-2
+2024-08-11 07:03:18.710657: terminado bloque 2
+2024-08-11 07:03:38.705158: página actual: https://www.chapalamls.net/en/properties/recently-added/page-3
+2024-08-11 07:03:38.975528: terminado bloque 3
+2024-08-11 07:03:58.968045: página actual: https://www.chapalamls.net/en/properties/recently-added/page-4
+2024-08-11 07:03:59.012056: UpdateStatus reporta: 10306 - El código existe pero el campo status ha cambiado.
+2024-08-11 07:03:59.218480: UpdateStatus reporta: 10290 - El código existe pero el campo status ha cambiado.
+2024-08-11 07:03:59.260546: terminado bloque 4
+2024-08-11 07:04:19.725766: página actual: https://www.chapalamls.net/en/properties/recently-added/page-5
+2024-08-11 07:04:20.015351: terminado bloque 5
+2024-08-11 07:04:40.172211: página actual: https://www.chapalamls.net/en/properties/recently-added/page-6
+2024-08-11 07:04:40.421823: terminado bloque 6
+2024-08-11 07:05:00.781567: página actual: https://www.chapalamls.net/en/properties/recently-added/page-7
+2024-08-11 07:05:00.901716: UpdateStatus reporta: 10213 - El código existe pero el campo status ha cambiado.
+2024-08-11 07:05:01.061499: UpdateStatus reporta: 10191 - El código existe pero el campo status ha cambiado.
+2024-08-11 07:05:01.096525: terminado bloque 7
+2024-08-11 07:05:22.265331: página actual: https://www.chapalamls.net/en/properties/recently-added/page-8
+2024-08-11 07:05:22.506118: terminado bloque 8
+2024-08-11 07:05:43.130625: página actual: https://www.chapalamls.net/en/properties/recently-added/page-9
+2024-08-11 07:05:43.403798: terminado bloque 9
+2024-08-11 07:06:03.224409: página actual: https://www.chapalamls.net/en/properties/recently-added/page-10
+2024-08-11 07:06:03.466462: terminado bloque 10
+2024-08-11 07:06:23.434727: página actual: https://www.chapalamls.net/en/properties/recently-added/page-11
+2024-08-11 07:06:23.674640: terminado bloque 11
+2024-08-11 07:06:44.456297: página actual: https://www.chapalamls.net/en/properties/recently-added/page-12
+2024-08-11 07:06:44.686349: terminado bloque 12
+2024-08-11 07:07:05.343853: página actual: https://www.chapalamls.net/en/properties/recently-added/page-13
+2024-08-11 07:07:05.578658: terminado bloque 13
+2024-08-11 07:07:27.773424: página actual: https://www.chapalamls.net/en/properties/recently-added/page-14
+2024-08-11 07:07:28.018857: terminado bloque 14
+2024-08-11 07:07:48.908954: página actual: https://www.chapalamls.net/en/properties/recently-added/page-15
+2024-08-11 07:07:49.147965: terminado bloque 15
+2024-08-11 07:08:09.997519: página actual: https://www.chapalamls.net/en/properties/recently-added/page-16
+2024-08-11 07:08:10.237504: terminado bloque 16
+2024-08-11 07:08:30.186832: página actual: https://www.chapalamls.net/en/properties/recently-added/page-17
+2024-08-11 07:08:30.346846: UpdateStatus reporta: 9892 - El código existe pero el campo status ha cambiado.
+2024-08-11 07:08:30.411805: UpdateStatus reporta: 9876 - El código existe pero el campo status ha cambiado.
+2024-08-11 07:08:30.427962: UpdateStatus reporta: 9875 - El código existe pero el campo listed_price ha cambiado.
+2024-08-11 07:08:30.466865: terminado bloque 17
+2024-08-11 07:08:51.176160: página actual: https://www.chapalamls.net/en/properties/recently-added/page-18
+2024-08-11 07:08:51.226465: UpdateStatus reporta: 9860 - El código existe pero el campo status ha cambiado.
+2024-08-11 07:08:51.486331: se han revisado todas las propiedades
+2024-08-11 07:08:54.139125: status modificados: 8
+2024-08-11 07:08:54.140127: terminado con éxito

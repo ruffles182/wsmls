@@ -1,5 +1,4 @@
-log.txt
-bloques.txt
+*.txt
 conection.py
 pruebas.py
 *.xlsx

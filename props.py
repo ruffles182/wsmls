@@ -27,11 +27,12 @@ class Propiedad:
     market_price = ""
     type = ""
     status = ""
+    status_id = 0
     mts_const = 0
     mts_lot = 0
     map_link = ""
 
-    def __init__(self, code="", link="", name="", address="", neighborhood="", agent_link="", agent_name="", date_listed="", currency="", market_price="", type="", status="", mts_const=0, mts_lot=0, map_link=""):
+    def __init__(self, code="", link="", name="", address="", neighborhood="", agent_link="", agent_name="", date_listed="", currency="", market_price="", type="", status="", status_id=0, mts_const=0, mts_lot=0, map_link=""):
         self.code = code
         self.link = link
         self.name = name
@@ -44,9 +45,16 @@ class Propiedad:
         self.market_price = market_price
         self.type = type
         self.status = status
+        self.status_id = status_id
         self.mts_const = mts_const
         self.mts_lot = mts_lot
         self.map_link = map_link
+
+    def __repr__(self):
+        return f"""
+        {self.code} - {self.name}
+        status: {self.status} - {self.status_id}
+        """
      
     def simple_print(self):
         return str(self.code) + ' -> ' + self.name + ' - ' + str(self.date_listed) + ' - ' + str(self.currency) + ' - ' + str(self.market_price) + ' - ' + self.status
@@ -68,17 +76,15 @@ class Propiedad:
 
         # Define la consulta SQL
         query = ("INSERT INTO properties "
-                "(code, link, name, address, neighboorhood, agent_link, agent_name, date_listed, currency, market_price, type, status, mts_const, mts_lot, map_link)"
-                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-        # Validación y conversión de mts_lot y  mts_const
-
+                "(code, link, name, address, neighboorhood, agent_link, agent_name, date_listed, currency, market_price, type, status, status_id, mts_const, mts_lot, map_link)"
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+        
 
         #validamos que mts_lot no esté vacio
         if self.mts_lot is None:
             self.mts_lot = 0
         else:
             self.mts_lot = self.mts_lot
-
 
         try:
             self.mts_lot = float(self.mts_lot) if self.mts_lot else 0
@@ -109,14 +115,23 @@ class Propiedad:
         except ValueError:
             self.mts_const = 0
 
+        try:
+            self.status_id = get_status_id_by_name(self.status)
+        except ValueError:
+            print(f"error al recibir el status a status_id de la propiedad {self.code}")
+
         # Define los datos a insertar
-        datos = (self.code, self.link, self.name, self.address, self.neighboorhood, self.agent_link, self.agent_name, self.date_listed, self.currency, self.market_price, self.type, self.status, self.mts_const, self.mts_lot, self.map_link)
+        datos = (self.code, self.link, self.name, self.address, self.neighboorhood, self.agent_link, self.agent_name, self.date_listed, self.currency, self.market_price, self.type, self.status, self.status_id, self.mts_const, self.mts_lot, self.map_link)
 
         # Ejecuta la consulta
         cursor.execute(query, datos)
-
+        
         # Asegúrate de hacer commit para guardar los cambios
         cnx.commit()
+        
+        #guardamos un nuevo statusChange
+        id_status = get_status_id_by_name(self.status)
+        insert_status_change(self.code,id_status, self.market_price, self.currency, False)
 
         cursor.close()
         cnx.close()
@@ -160,6 +175,38 @@ class EmailSend:
         print('se envió el email a: ' + self.receiver)
 
 
+##Clase statusChange #######################################################################
+class StatusChange():
+    prev_status = 0
+    prev_currency = ""
+    prev_price = 0
+
+    new_status = 0
+    new_currency = ""
+    new_price =0
+
+    link = ""
+    code = ""
+
+    def __init__(self, prev_status = 0, prev_currency = "", prev_price = 0, new_status = 0, new_currency = "", new_price = 0, link ="", code = ""):
+        
+        self.prev_status = prev_status
+        self.prev_currency = prev_currency
+        self.prev_price = prev_price
+
+        self.new_status = new_status
+        self.new_currency = new_currency
+        self.new_price = new_price
+
+        self.link = link
+        self.code = code
+    def __repr__(self):
+        return f"""
+        {self.code} - {self.link}
+        valores previos-> status: {self.prev_status} - {self.prev_currency} {self.prev_price} 
+        valores nuevos-> status: {self.new_status} - {self.new_currency} {self.new_price}
+        """
+
 ##Funciones ################################################################################
 def conectar():
         con = Conect()
@@ -176,13 +223,12 @@ def guardar_en_archivo(texto, nombre_archivo="bloques.txt"):
     with open(nombre_archivo, "a") as archivo:
         archivo.write(texto)
 
-def log_action(action_message, timestamp=None):
+def log_action(action_message, timestamp=None, file = 'log.txt'):
     timestamp = timestamp if timestamp else datetime.datetime.now()
     log_message = f"{timestamp}: {action_message}"
 
-    with open('log.txt', 'a') as file:
+    with open(file, 'a') as file:
         file.write(log_message + '\n')
-
     print(log_message)
 
 def formato_texto(cadena):
@@ -224,7 +270,7 @@ def texto_correo_extractor():
         <p>Se agregaron {cantidad_propiedades} registros nuevos</p>
     """
 
-    cadena_final = "<h2>Made by R84 :)</r84>"
+    cadena_final = "<h3>Made by R84 :)</h3>"
 
     for propiedad in propiedades:
         cadena_propiedades = cadena_propiedades + f"""
@@ -237,20 +283,36 @@ def texto_correo_extractor():
         """
     return cadena_inicio + cadena_propiedades + cadena_final
 
-def texto_correo_status_update(prop):
-    texto = f"""
-        <h1>Hola!!..</h1>
-        <p>Han actualizado los datos de la siguiente propiedad</p>
-        <div style='padding-top: 30px'>
-            <h1><a href='{prop.link}'>{prop.code} - {prop.name}</a></h1>
-            <p><b>Adress: </n>{prop.address}</p>
-            <p><b>Price: {prop.currency}</b> <span style='color: #FF5D35'>$ {format(int(prop.market_price), ",")}</span></p>
-            <p><b>Neighboorhood:</b>{prop.neighboorhood}</p>
-        </div>
-        <h2>Made by R84 :)</h2>
-        """
+def texto_correo_status_update(sc):
+    cantidad_sc = len(sc)
+    cadena_sc = ""
+
     
-    return texto
+
+    cadena_inicio = f"""
+        <h1>Hola!!..</h1>
+        <p>Se modificaron {cantidad_sc} status de propiedades</p>
+    """
+
+    cadena_final = "<h3>Made by R84 :)</h3>"
+
+    for cambio in sc:
+        nombre_prev_status = get_status_name_by_id(cambio.prev_status)
+        nombre_new_status = get_status_name_by_id(cambio.new_status)
+        cadena_sc = cadena_sc + f"""
+                <div style='padding-bottom: 15px'>
+                    <div style='padding: 10px 10px 5px 5px'>
+                        <h1><a href='{cambio.link}'>{cambio.code}</a></h1>
+                        <p><b>Status anterior: </n>{nombre_prev_status}</p>
+                        <p><b>Precio: {cambio.prev_currency}</b> <span style='color: #FF5D35'>$ {format(int(cambio.prev_price), ",")}</span></p>
+                    </div>
+                    <div style='padding: 10px 10px 5px 5px'>
+                        <p><b>Status anterior: </n>{nombre_new_status}</p>
+                        <p><b>Precio: {cambio.new_currency}</b> <span style='color: #FF5D35'>$ {format(int(cambio.new_price), ",")}</span></p>
+                    </div>
+                </div>
+        """
+    return cadena_inicio + cadena_sc + cadena_final
 
 
 def check_empty_names(obj_list):
@@ -338,7 +400,7 @@ def handle_result(result):
 def load_from_code(code):
     conn = conectar()
     cursor = conn.cursor()
-    query =  "SELECT code, link, name, address, neighboorhood, agent_link, agent_name, date_listed, currency, market_price, type, status, mts_const, mts_lot, map_link FROM properties WHERE code = %s"
+    query =  "SELECT code, link, name, address, neighboorhood, agent_link, agent_name, date_listed, currency, market_price, type, status, status_id, mts_const, mts_lot, map_link FROM properties WHERE code = %s"
     cursor.execute(query, (code,))
     result = cursor.fetchone()
     conn.close()
@@ -410,9 +472,9 @@ def get_status_name_by_id(status_id):
     else:
         return "No se encontró el nombre para el estado dado."
 
-def insert_status_change(code, status_id, price):
-    cnn = mysql.connector.connect(user='tu_usuario', password='tu_contraseña', host='tu_host', database='tu_base_de_datos')
-    cursor = cnn.cursor()
+def insert_status_change(code, status_id, price, currency, actualizar):
+    conn = conectar()
+    cursor = conn.cursor()
 
     # Primero, encontrar el property_id basado en el code
     query_property_id = "SELECT id FROM properties WHERE code = %s"
@@ -421,22 +483,32 @@ def insert_status_change(code, status_id, price):
 
     # Insertar el nuevo status_change
     insert_query = """
-    INSERT INTO status_changes (status_id, property_id, price)
-    VALUES (%s, %s, %s)
+    INSERT INTO status_changes (status_id, property_id, price, currency)
+    VALUES (%s, %s, %s, %s)
     """
-    cursor.execute(insert_query, (status_id, property_id, price))
-    cnn.commit()
+    cursor.execute(insert_query, (status_id, property_id, price, currency))
 
+    if (actualizar):
+        # Actualizar properties
+        update_query = """
+        UPDATE properties
+        SET status_id = %s, market_price = %s, currency = %s
+        WHERE id = %s
+        """
+        cursor.execute(update_query, (status_id, price, currency, property_id))
+
+    conn.commit()
     cursor.close()
-    cnn.close()
-    print("Registro insertado correctamente.")
+    conn.close()
+
+    print(f"Registro de status change: {code} insertado correctamente.")
 
 def get_all_status_from_properties():
     conn = conectar()
     cursor = conn.cursor()
 
     query = """
-    SELECT id,code,status, market_price FROM `properties`
+    SELECT id,code,status, market_price, currency FROM `properties`
     """
     
     cursor.execute(query)
@@ -446,3 +518,23 @@ def get_all_status_from_properties():
     conn.close()
     
     return results
+
+def get_properties_id_by_code(property_code):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    query = """
+    SELECT id from properties where code = %s
+    LIMIT 1
+    """
+    
+    cursor.execute(query, (property_code,))
+    
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    if result:
+        return str(result[0])
+    else:
+        return "No se encontró el ID para el estado dado."
