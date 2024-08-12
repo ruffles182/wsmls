@@ -566,7 +566,7 @@ def actualizar_status():
 def realizar_backup(usuario, nombre_db, directorio_backup):
     # Crear el nombre del archivo basado en la fecha y hora actual
     fecha_hora = datetime.now().strftime("%Y-%m-%d-%H%M%S")
-    archivo_backup = f"{directorio_backup}/fecha-hora-backup-{fecha_hora}.sql"
+    archivo_backup = f"{directorio_backup}/{fecha_hora}-back.sql"
 
     # Realizar el backup
     try:
@@ -581,9 +581,11 @@ def realizar_backup(usuario, nombre_db, directorio_backup):
         # Listar los archivos en el directorio de backup
         archivos = sorted([f for f in os.listdir(directorio_backup) if f.endswith(".sql")])
         
+        max_files = 120:
         # Mantener solo los últimos 20 archivos
-        while len(archivos) > 200:
-            os.remove(os.path.join(directorio_backup, archivos.pop(0)))
-        log_action("Archivos antiguos eliminados correctamente.", None, "backupDB.log")
+        if len(archivos) > max_files:
+            while len(archivos) > max_files:
+                os.remove(os.path.join(directorio_backup, archivos.pop(0)))
+            log_action("Archivos antiguos eliminados correctamente.", None, "backupDB.log")
     except Exception as e:
         log_action(f"Error al eliminar archivos antiguos: {e}", None, "backupDB.log")
