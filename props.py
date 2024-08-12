@@ -581,7 +581,7 @@ def realizar_backup(usuario, nombre_db, directorio_backup):
         # Listar los archivos en el directorio de backup
         archivos = sorted([f for f in os.listdir(directorio_backup) if f.endswith(".sql")])
         
-        max_files = 120:
+        max_files = 120
         # Mantener solo los últimos 20 archivos
         if len(archivos) > max_files:
             while len(archivos) > max_files:
