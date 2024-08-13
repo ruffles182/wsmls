@@ -76,11 +76,14 @@ class Propiedad:
         if cursor.fetchone():
             # print(f"El codigo {self.code} ya existe en la base de datos.")
             return False
+        
+        # Fecha y hora actual
+        fecha_hora_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         # Define la consulta SQL
         query = ("INSERT INTO properties "
-                "(code, link, name, address, neighboorhood, agent_link, agent_name, date_listed, currency, market_price, type, status, status_id, mts_const, mts_lot, map_link)"
-                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                "(code, link, name, address, neighboorhood, agent_link, agent_name, date_listed, currency, market_price, type, status, status_id, mts_const, mts_lot, map_link, created_at, updated_at)"
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
         
 
         #validamos que mts_lot no esté vacio
@@ -124,7 +127,7 @@ class Propiedad:
             print(f"error al recibir el status a status_id de la propiedad {self.code}")
 
         # Define los datos a insertar
-        datos = (self.code, self.link, self.name, self.address, self.neighboorhood, self.agent_link, self.agent_name, self.date_listed, self.currency, self.market_price, self.type, self.status, self.status_id, self.mts_const, self.mts_lot, self.map_link)
+        datos = (self.code, self.link, self.name, self.address, self.neighboorhood, self.agent_link, self.agent_name, self.date_listed, self.currency, self.market_price, self.type, self.status, self.status_id, self.mts_const, self.mts_lot, self.map_link, fecha_hora_actual, fecha_hora_actual)
 
         # Ejecuta la consulta
         cursor.execute(query, datos)
@@ -483,22 +486,24 @@ def insert_status_change(code, status_id, price, currency, actualizar):
     query_property_id = "SELECT id FROM properties WHERE code = %s"
     cursor.execute(query_property_id, (code,))
     property_id = cursor.fetchone()[0]
+    # Fecha y hora actual
+    fecha_hora_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # Insertar el nuevo status_change
     insert_query = """
-    INSERT INTO status_changes (status_id, property_id, price, currency)
-    VALUES (%s, %s, %s, %s)
+    INSERT INTO status_changes (status_id, property_id, price, currency, created_at, updated_at)
+    VALUES (%s, %s, %s, %s, %s, %s)
     """
-    cursor.execute(insert_query, (status_id, property_id, price, currency))
+    cursor.execute(insert_query, (status_id, property_id, price, currency, fecha_hora_actual, fecha_hora_actual))
 
     if (actualizar):
         # Actualizar properties
         update_query = """
         UPDATE properties
-        SET status_id = %s, market_price = %s, currency = %s
+        SET status_id = %s, market_price = %s, currency = %s, updated_at = %s
         WHERE id = %s
         """
-        cursor.execute(update_query, (status_id, price, currency, property_id))
+        cursor.execute(update_query, (status_id, price, currency, property_id, fecha_hora_actual))
 
     conn.commit()
     cursor.close()
@@ -554,7 +559,10 @@ def actualizar_status():
     for prop in properties:
         status_id = get_status_id_by_name(prop[1])
         if status_id is not None:
-            cursor.execute("UPDATE properties SET status_id = %s WHERE id = %s", (status_id, prop[0]))
+            
+            # Fecha y hora actual
+            fecha_hora_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            cursor.execute("UPDATE properties SET status_id = %s, updated_at=%s WHERE id = %s", (status_id, fecha_hora_actual, prop[0]))
 
     # Guardar los cambios
     conn.commit()
