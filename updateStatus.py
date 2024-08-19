@@ -112,8 +112,10 @@ with sync_playwright() as p:
                     #creamos los status_changes y actualizamos los campos en properties
                     try:
                         insert_status_change(prop.code, get_status_id_by_name(estatus), precio, moneda, True)
+                        log_action(f"haciendo try a {prop.code}, {get_status_id_by_name(estatus)}, {precio}, {moneda} ", None, "update_status.log")
                     except Exception as e:
                         log_action(f"error haciendo el status change en {prop.code}: {e}", datetime.datetime.now(), 'update_status.log')
+                        log_action(f"haciendo try a {prop.code}, {get_status_id_by_name(estatus)}, {precio}, {moneda} ", None, "update_status.log")
 
             
             continuar = True if int(codigo) > int(ultimo_code) else False

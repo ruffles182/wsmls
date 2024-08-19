@@ -497,13 +497,14 @@ def insert_status_change(code, status_id, price, currency, actualizar):
     cursor.execute(insert_query, (status_id, property_id, price, currency, fecha_hora_actual, fecha_hora_actual))
 
     if (actualizar):
+        log_action("funcion actualizar es True", "update_status.log")
         # Actualizar properties
         update_query = """
         UPDATE properties
-        SET status_id = %s, market_price = %s, currency = %s, updated_at = %s
+        SET status_id = %s, status = %s, market_price = %s, currency = %s, updated_at = %s
         WHERE id = %s
         """
-        cursor.execute(update_query, (status_id, price, currency, property_id, fecha_hora_actual))
+        cursor.execute(update_query, (status_id, get_status_name_by_id(status_id), price, currency, fecha_hora_actual, property_id))
 
     conn.commit()
     cursor.close()
